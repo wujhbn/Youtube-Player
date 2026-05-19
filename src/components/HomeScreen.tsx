@@ -33,7 +33,7 @@ export function HomeScreen() {
     <div className="min-h-screen p-6 sm:p-12 max-w-7xl mx-auto flex flex-col gap-12">
       <header className="flex flex-col sm:flex-row justify-between items-center gap-6">
         <h1 className={`${titleSize} font-black text-stone-800 drop-shadow-[3px_3px_0_#fff59d]`}>
-          📺 Youtube 播放器
+          📺 YouTube 播放器
         </h1>
         <div className="flex gap-4">
           <BigButton variant="success" onClick={handleAdd} icon={<Plus strokeWidth={3} />}>
