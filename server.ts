@@ -34,6 +34,29 @@ async function startServer() {
     }
   });
 
+  app.get("/api/yt-search", async (req, res) => {
+    try {
+      const q = req.query.q;
+      if (!q || typeof q !== "string") {
+        return res.status(400).json({ error: "Missing q parameter" });
+      }
+      
+      const ytSearch = (await import("yt-search")).default;
+      const r = await ytSearch(q);
+      const videos = r.videos.slice(0, 10).map(v => ({
+        videoId: v.videoId,
+        title: v.title,
+        thumbnail: v.thumbnail,
+        author: v.author.name
+      }));
+      
+      res.json(videos);
+    } catch (err: any) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
