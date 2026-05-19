@@ -13,8 +13,8 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
         manifest: {
-          name: '開心影片播放器',
-          short_name: '影片播放',
+          name: 'YouTube 播放器',
+          short_name: 'YouTube播放器',
           description: '專為中重度心智障礙學生設計的 YouTube MV 播放器',
           theme_color: '#fffbeb',
           background_color: '#fffbeb',

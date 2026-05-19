@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#fffbeb"/>
+  <!-- TV Body -->
+  <rect x="56" y="120" width="400" height="300" rx="60" fill="#f9a8d4" stroke="#292524" stroke-width="24" stroke-linejoin="round"/>
+  <!-- TV Antenna -->
+  <path d="M 150 120 L 220 50 M 362 120 L 292 50" stroke="#292524" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="220" cy="50" r="16" fill="#4ade80" stroke="#292524" stroke-width="20"/>
+  <circle cx="292" cy="50" r="16" fill="#4ade80" stroke="#292524" stroke-width="20"/>
+  
+  <!-- TV Screen -->
+  <rect x="100" y="160" width="312" height="200" rx="30" fill="#93c5fd" stroke="#292524" stroke-width="24" stroke-linejoin="round"/>
+  
+  <!-- Play Button inside screen -->
+  <path d="M 220 210 L 310 260 L 220 310 Z" fill="#4ade80" stroke="#292524" stroke-width="24" stroke-linejoin="round"/>
+  
+  <!-- Cheeks -->
+  <circle cx="140" cy="300" r="16" fill="#fb923c"/>
+  <circle cx="372" cy="300" r="16" fill="#fb923c"/>
+</svg>
