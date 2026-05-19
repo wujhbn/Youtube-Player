@@ -11,8 +11,36 @@ export function PlayerScreen() {
   const playerRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const controlsTimerRef = useRef<NodeJS.Timeout|null>(null);
   
-  // To handle inactivity hiding of controls maybe, but for special ed, static clear controls are better.
+  // Auto-hide controls logic
+  const resetControlsTimer = () => {
+    setShowControls(true);
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    controlsTimerRef.current = setTimeout(() => {
+      if (isPlaying) setShowControls(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    resetControlsTimer();
+    return () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    };
+  }, [isPlaying]);
+
+  useEffect(() => {
+    const handleEvents = () => resetControlsTimer();
+    window.addEventListener('mousemove', handleEvents);
+    window.addEventListener('touchstart', handleEvents);
+    window.addEventListener('click', handleEvents);
+    return () => {
+      window.removeEventListener('mousemove', handleEvents);
+      window.removeEventListener('touchstart', handleEvents);
+      window.removeEventListener('click', handleEvents);
+    };
+  }, []);
   
   const playlist = playlists.find(p => p.id === currentPlaylistId);
   const song = playlist?.songs[currentSongIndex];
@@ -85,22 +113,29 @@ export function PlayerScreen() {
   return (
     <div className={cn("flex flex-col bg-stone-900 transition-all text-white", isFullscreen ? "fixed inset-0 z-50 p-2" : "min-h-screen p-4 sm:p-8 max-w-7xl mx-auto")}>
       
-      {!isFullscreen && (
-        <header className="flex justify-between items-center mb-6">
-          <BigButton 
-            variant="secondary" 
-            onClick={() => navigate('playlist', playlist.id)} 
-            className="border-stone-400 bg-white shadow-[0_8px_0_0_#78716c]"
-            icon={<ArrowLeft strokeWidth={3} className="text-stone-800" />}
+      <AnimatePresence>
+        {showControls && !isFullscreen && (
+          <motion.header 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex justify-between items-center mb-6"
           >
-            回清單
-          </BigButton>
-          <div className="text-right flex-1 ml-6">
-            <h2 className="text-3xl sm:text-4xl font-black truncate">{playlist.name}</h2>
-            <p className="text-xl sm:text-2xl font-bold text-stone-400 mt-2">第 {currentSongIndex + 1} 首 / 共 {playlist.songs.length} 首</p>
-          </div>
-        </header>
-      )}
+            <BigButton 
+              variant="secondary" 
+              onClick={() => navigate('playlist', playlist.id)} 
+              className="border-stone-400 bg-white shadow-[0_8px_0_0_#78716c]"
+              icon={<ArrowLeft strokeWidth={3} className="text-stone-800" />}
+            >
+              回清單
+            </BigButton>
+            <div className="text-right flex-1 ml-6 text-stone-100">
+              <h2 className="text-3xl sm:text-4xl font-black truncate">{playlist.name}</h2>
+              <p className="text-xl sm:text-2xl font-bold text-stone-400 mt-2">第 {currentSongIndex + 1} 首 / 共 {playlist.songs.length} 首</p>
+            </div>
+          </motion.header>
+        )}
+      </AnimatePresence>
 
       {/* Video Container */}
       <div className={cn(
@@ -117,74 +152,83 @@ export function PlayerScreen() {
       </div>
 
       {/* Controls */}
-      <div className={cn(
-         "flex items-center justify-between gap-4 sm:gap-8 mt-6",
-         isFullscreen && "absolute bottom-6 left-6 right-6"
-      )}>
-         {/* Left Side */}
-         <div className="flex gap-4">
-           {isFullscreen && (
-              <motion.button 
-                whileTap={{ scale: 0.9 }}
-                onClick={toggleFullscreen}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
-              >
-                <ArrowLeftCircle strokeWidth={3} size={40} />
-              </motion.button>
-           )}
-         </div>
-
-         {/* Center Controls */}
-         <div className="flex items-center gap-4 sm:gap-6 mx-auto bg-stone-800 p-4 sm:p-6 rounded-[3rem] border-[6px] border-stone-700 shadow-xl">
-            {!settings.singleStepMode && (
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={playPrev}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
-              >
-                 <SkipBack size={iconSize} strokeWidth={3} fill="currentColor" />
-              </motion.button>
+      <AnimatePresence>
+        {showControls && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className={cn(
+              "flex items-center justify-between gap-4 sm:gap-8 mt-6",
+              isFullscreen && "absolute bottom-6 left-6 right-6 z-20"
             )}
+          >
+             {/* Left Side */}
+             <div className="flex gap-4">
+               {isFullscreen && (
+                  <motion.button 
+                    whileTap={{ scale: 0.9 }}
+                    onClick={toggleFullscreen}
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                  >
+                    <ArrowLeftCircle strokeWidth={3} size={40} />
+                  </motion.button>
+               )}
+             </div>
 
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handlePlayPause}
-              className={cn(
-                "w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[8px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_8px_0_0_#292524] active:shadow-none active:translate-y-[8px] transition-colors",
-                isPlaying ? "bg-pink-300 hover:bg-pink-200" : "bg-green-400 hover:bg-green-300"
-              )}
-            >
-               {isPlaying 
-                 ? <Pause size={largeIconSize} strokeWidth={3} fill="currentColor" /> 
-                 : <Play size={largeIconSize} strokeWidth={3} fill="currentColor" className="ml-4" />
-               }
-            </motion.button>
+             {/* Center Controls */}
+             <div className="flex items-center gap-4 sm:gap-6 mx-auto bg-stone-800/90 backdrop-blur-md p-4 sm:p-6 rounded-[3rem] border-[6px] border-stone-700 shadow-2xl">
+                {!settings.singleStepMode && (
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={playPrev}
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                  >
+                     <SkipBack size={iconSize} strokeWidth={3} fill="currentColor" />
+                  </motion.button>
+                )}
 
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={playNext}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
-            >
-               <SkipForward size={iconSize} strokeWidth={3} fill="currentColor" />
-            </motion.button>
-         </div>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handlePlayPause}
+                  className={cn(
+                    "w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[8px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_8px_0_0_#292524] active:shadow-none active:translate-y-[8px] transition-colors",
+                    isPlaying ? "bg-pink-300 hover:bg-pink-200" : "bg-green-400 hover:bg-green-300"
+                  )}
+                >
+                   {isPlaying 
+                     ? <Pause size={largeIconSize} strokeWidth={3} fill="currentColor" /> 
+                     : <Play size={largeIconSize} strokeWidth={3} fill="currentColor" className="ml-4" />
+                   }
+                </motion.button>
 
-         {/* Right Side */}
-         <div className="flex gap-4">
-           {!isFullscreen && !settings.singleStepMode && (
-             <motion.button 
-                whileTap={{ scale: 0.9 }}
-                onClick={toggleFullscreen}
-                className="w-20 h-20 rounded-2xl bg-blue-300 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
-              >
-                <Maximize strokeWidth={3} size={36} />
-              </motion.button>
-           )}
-         </div>
-      </div>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={playNext}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                >
+                   <SkipForward size={iconSize} strokeWidth={3} fill="currentColor" />
+                </motion.button>
+             </div>
+
+             {/* Right Side */}
+             <div className="flex gap-4">
+               {!isFullscreen && !settings.singleStepMode && (
+                 <motion.button 
+                    whileTap={{ scale: 0.9 }}
+                    onClick={toggleFullscreen}
+                    className="w-20 h-20 rounded-2xl bg-blue-300 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                  >
+                    <Maximize strokeWidth={3} size={36} />
+                  </motion.button>
+               )}
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
     </div>
   );

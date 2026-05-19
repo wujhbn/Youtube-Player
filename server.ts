@@ -41,7 +41,8 @@ async function startServer() {
         return res.status(400).json({ error: "Missing q parameter" });
       }
       
-      const ytSearch = (await import("yt-search")).default;
+      const ytSearchImport = await import("yt-search");
+      const ytSearch = ytSearchImport.default || ytSearchImport;
       const r = await ytSearch(q);
       const videos = r.videos.slice(0, 10).map(v => ({
         videoId: v.videoId,

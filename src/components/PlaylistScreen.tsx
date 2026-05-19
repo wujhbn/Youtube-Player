@@ -140,6 +140,9 @@ export function PlaylistScreen() {
               type="text" 
               value={urlInput}
               onChange={e => setUrlInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleAddYoutube();
+              }}
               placeholder="請貼上網址，或輸入關鍵字搜尋..."
               className={`flex-1 rounded-[1.5rem] border-[6px] border-stone-800 px-6 py-4 font-bold outline-none focus:border-pink-400 focus:bg-pink-50 transition-colors shadow-[4px_4px_0_0_#292524] ${textSize}`}
             />
