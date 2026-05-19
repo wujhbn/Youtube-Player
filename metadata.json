@@ -1,0 +1,6 @@
+{
+  "name": "開心影片播放器",
+  "description": "專為中重度心智障礙學生設計的 YouTube MV 播放器，擁有超大按鈕、簡單操作介面與自訂播放列表功能。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
