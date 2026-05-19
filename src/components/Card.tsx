@@ -12,13 +12,12 @@ interface CardProps extends HTMLMotionProps<"div"> {
 export function Card({ children, className, onClick, color = "bg-orange-100", ...props }: CardProps) {
   return (
     <motion.div
-      whileHover={onClick ? { scale: 1.02, y: -4 } : {}}
+      whileHover={onClick ? { scale: 1.01 } : {}}
       whileTap={onClick ? { scale: 0.98 } : {}}
       onClick={onClick}
       className={cn(
-        "rounded-[2.5rem] border-[6px] border-stone-800 p-6 shadow-[8px_8px_0_0_#292524] relative overflow-hidden",
-        color,
-        onClick && "cursor-pointer active:shadow-[2px_2px_0_0_#292524] active:translate-x-[6px] active:translate-y-[6px] transition-all",
+        "rounded-[24px] bg-white p-6 shadow-sm border border-gray-100 relative overflow-hidden",
+        onClick && "cursor-pointer active:opacity-80 transition-all",
         className
       )}
       {...props}

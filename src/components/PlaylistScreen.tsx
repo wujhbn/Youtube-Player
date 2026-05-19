@@ -14,6 +14,7 @@ export function PlaylistScreen() {
 
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [showAuthIframe, setShowAuthIframe] = useState(false);
 
   const playlist = playlists.find(p => p.id === activePlaylistId);
 
@@ -46,6 +47,15 @@ export function PlaylistScreen() {
       setLoading(true);
       try {
         const res = await fetch(`/api/yt-search?q=${encodeURIComponent(urlInput)}`);
+        
+        // Handle AI Studio Proxy Cookie Check for PWAs
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("text/html")) {
+          setShowAuthIframe(true);
+          setLoading(false);
+          return;
+        }
+
         if (!res.ok) throw new Error("Search failed");
         const data = await res.json();
         if (data && data.length > 0) {
@@ -65,6 +75,14 @@ export function PlaylistScreen() {
     setLoading(true);
     try {
       const res = await fetch(`/api/yt-info?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`);
+      
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("text/html")) {
+        setShowAuthIframe(true);
+        setLoading(false);
+        return;
+      }
+      
       let title = `影片 ${videoId}`;
       let thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
       
@@ -110,13 +128,13 @@ export function PlaylistScreen() {
   const textSize = settings.bigButtonMode ? 'text-4xl' : 'text-2xl';
 
   return (
-    <div className="min-h-screen p-6 sm:p-12 max-w-7xl mx-auto flex flex-col gap-8">
-      <header className="flex flex-col sm:flex-row justify-between items-center gap-6">
-        <div className="flex items-center gap-6">
-          <BigButton variant="secondary" onClick={() => navigate('home')} icon={<ArrowLeft strokeWidth={3} />}>
+    <div className="min-h-screen px-4 sm:px-12 max-w-7xl mx-auto flex flex-col gap-6" style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
+      <header className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <BigButton variant="secondary" onClick={() => navigate('home')} icon={<ArrowLeft strokeWidth={2} />} className="p-3">
             返回
           </BigButton>
-          <h1 className={`${titleSize} font-black text-stone-800 drop-shadow-[3px_3px_0_#93c5fd]`}>
+          <h1 className={`${titleSize} font-bold text-gray-900 tracking-tight truncate max-w-[200px] sm:max-w-md`}>
             {playlist.name}
           </h1>
         </div>
@@ -133,71 +151,77 @@ export function PlaylistScreen() {
       </header>
 
       {!settings.singleStepMode && (
-        <Card color="bg-green-100" className="flex flex-col gap-6 p-8">
-          <h2 className="text-3xl font-black flex items-center gap-4"><Plus strokeWidth={3} /> 加新影片進來</h2>
-          <div className="flex flex-col sm:flex-row gap-4">
+        <Card className="flex flex-col gap-4 p-6 sm:p-8 mt-4">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900"><Plus strokeWidth={2} /> 加新影片進來</h2>
+          <div className="flex flex-col sm:flex-row gap-3">
             <input 
               type="text" 
               value={urlInput}
               onChange={e => setUrlInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  (e.target as HTMLInputElement).blur();
+                  handleAddYoutube();
+                }
+              }}
               placeholder="請貼上網址，或輸入關鍵字搜尋..."
-              className={`flex-1 rounded-[1.5rem] border-[6px] border-stone-800 px-6 py-4 font-bold outline-none focus:border-pink-400 focus:bg-pink-50 transition-colors shadow-[2px_2px_0_0_#292524] ${textSize}`}
+              className={`flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-medium outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all ${textSize}`}
             />
-            <BigButton variant="success" onClick={handleAddYoutube} disabled={loading}>
+            <BigButton variant="success" onClick={handleAddYoutube} disabled={loading} className="py-3 px-6">
               {loading ? '讀取中...' : '找找看'}
             </BigButton>
           </div>
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
         {playlist.songs.map((song, idx) => (
           <Card 
             key={song.id} 
-            color="bg-white" 
-            className="flex flex-col gap-4 p-6 hover:bg-orange-50 cursor-pointer"
+            className="flex flex-col gap-3 p-4 hover:bg-gray-50/50 cursor-pointer border-none shadow-sm"
             onClick={() => {
               useStore.getState().playPlaylist(playlist.id, idx);
               navigate('player', playlist.id);
             }}
           >
-            <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <div className="absolute top-3 right-3 z-10 flex gap-2">
               {!settings.singleStepMode && (
                   <button 
-                  className="w-14 h-14 rounded-full bg-pink-100 border-4 border-stone-800 flex items-center justify-center hover:bg-pink-200 active:scale-95 shadow-[2px_2px_0_0_#292524]"
+                  className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center hover:bg-red-50 active:scale-95 text-gray-500 hover:text-red-500 transition-colors shadow-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSongToDelete(song.id);
                   }}
                 >
-                  <Trash2 size={24} strokeWidth={3} />
+                  <Trash2 size={16} strokeWidth={2} />
                 </button>
               )}
             </div>
 
-            <div className="relative aspect-video rounded-2xl overflow-hidden border-4 border-stone-800 shadow-[2px_2px_0_0_#292524]">
+            <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-100">
               <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                 <Play className="text-white w-20 h-20 drop-shadow-lg" fill="currentColor" />
+                 <Play className="text-white w-12 h-12 drop-shadow-md" fill="currentColor" />
               </div>
             </div>
             
-            <h3 className={`${settings.bigButtonMode ? 'text-3xl' : 'text-2xl'} font-black line-clamp-2 mt-2 leading-snug`}>
+            <h3 className={`${settings.bigButtonMode ? 'text-xl' : 'text-base'} font-bold line-clamp-2 mt-1 leading-snug text-gray-900`}>
               {song.title}
             </h3>
           </Card>
         ))}
         {playlist.songs.length === 0 && (
-          <div className="col-span-full text-center py-20 text-3xl font-black text-stone-400 border-8 border-dashed border-stone-300 rounded-[3rem]">
+          <div className="col-span-full text-center py-24 text-xl font-medium text-gray-400 bg-white rounded-[32px] border border-gray-100 shadow-sm">
              還沒有影片喔，趕快加入吧！
           </div>
         )}
       </div>
 
       <Modal isOpen={!!songToDelete}>
-        <h2 className="text-4xl font-black text-center text-stone-800">確定要刪除這個影片嗎？</h2>
-        <div className="flex flex-col sm:flex-row gap-6 mt-4">
-          <BigButton variant="danger" className="flex-1 text-4xl py-6" onClick={() => {
+        <h2 className="text-2xl font-bold text-center text-gray-900 tracking-tight">確定要刪除這個影片嗎？</h2>
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <BigButton variant="danger" className="flex-1" onClick={() => {
             if (songToDelete) {
               deleteSong(playlist.id, songToDelete);
             }
@@ -208,28 +232,49 @@ export function PlaylistScreen() {
       </Modal>
 
       <Modal isOpen={!!alertMessage}>
-        <h2 className="text-4xl font-black text-center text-stone-800 leading-normal">{alertMessage}</h2>
+        <h2 className="text-xl font-bold text-center text-gray-900 leading-normal tracking-tight">{alertMessage}</h2>
         <div className="flex justify-center mt-8">
-          <BigButton variant="primary" className="text-4xl py-6 px-12" onClick={() => setAlertMessage('')}>我知道了</BigButton>
+          <BigButton variant="primary" className="flex-1" onClick={() => setAlertMessage('')}>我知道了</BigButton>
         </div>
       </Modal>
 
       <Modal isOpen={isSearchModalOpen}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-4xl font-black text-stone-800">選一個你想加的影片：</h2>
-          <BigButton variant="secondary" onClick={() => setIsSearchModalOpen(false)}>取消</BigButton>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-gray-900 tracking-tight">選一個你想加的影片</h2>
+          <button className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors font-bold" onClick={() => setIsSearchModalOpen(false)}>
+             取消
+          </button>
         </div>
-        <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4">
+        <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2">
           {searchResults.map((video, i) => (
             <div 
               key={i} 
-              className="flex items-center gap-6 p-4 border-4 border-stone-800 rounded-2xl cursor-pointer hover:bg-orange-100 transition-colors shadow-[2px_2px_0_0_#292524] active:scale-95 active:shadow-none bg-white"
+              className="flex items-center gap-4 p-3 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors active:scale-[0.98] bg-white border border-gray-100 shadow-sm"
               onClick={() => handleSelectSearchResult(video)}
             >
-              <img src={video.thumbnail} alt={video.title} className="w-40 h-28 object-cover rounded-xl border-4 border-stone-800" />
-              <h3 className="text-2xl font-bold flex-1 line-clamp-3">{video.title}</h3>
+              <img src={video.thumbnail} alt={video.title} className="w-32 aspect-video object-cover rounded-lg bg-gray-100" />
+              <h3 className="text-sm font-bold flex-1 line-clamp-3 text-gray-900 leading-snug">{video.title}</h3>
             </div>
           ))}
+        </div>
+      </Modal>
+
+      <Modal isOpen={showAuthIframe}>
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-4 text-center">需要驗證以啟用搜尋</h2>
+        <p className="text-gray-600 mb-4 text-sm text-center">iOS 阻擋了應用程式的連線。請在下方點擊「Allow」或「允許」來驗證。</p>
+        <div className="w-full h-[400px] border-2 border-gray-200 rounded-xl overflow-hidden bg-gray-50 mb-4 relative">
+          <iframe 
+            src="/api/yt-search"
+            className="w-full h-full border-none"
+            title="auth-frame"
+          />
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <BigButton variant="success" className="flex-1" onClick={() => {
+            setShowAuthIframe(false);
+            handleAddYoutube();
+          }}>我已經點了（再試一次）</BigButton>
+          <BigButton variant="secondary" className="flex-1" onClick={() => setShowAuthIframe(false)}>取消</BigButton>
         </div>
       </Modal>
     </div>

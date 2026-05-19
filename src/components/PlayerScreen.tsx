@@ -83,29 +83,29 @@ export function PlayerScreen() {
   const largeIconSize = settings.bigButtonMode ? 64 : 48;
 
   return (
-    <div className={cn("flex flex-col bg-stone-900 transition-all text-white", isFullscreen ? "fixed inset-0 z-50 p-2" : "min-h-screen p-4 sm:p-8 max-w-7xl mx-auto")}>
+    <div className={cn("flex flex-col bg-black transition-all text-white", isFullscreen ? "fixed inset-0 z-50 pb-[env(safe-area-inset-bottom)] p-0" : "min-h-screen px-4 py-6 sm:p-8 max-w-7xl mx-auto")} style={!isFullscreen ? { paddingTop: 'max(1.5rem, env(safe-area-inset-top))', paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' } : {}}>
       
       {!isFullscreen && (
-        <header className="flex justify-between items-center mb-6">
+        <header className="flex justify-between items-center mb-6 pt-2 px-2">
           <BigButton 
             variant="secondary" 
             onClick={() => navigate('playlist', playlist.id)} 
-            className="border-stone-400 bg-white shadow-[0_8px_0_0_#78716c]"
-            icon={<ArrowLeft strokeWidth={3} className="text-stone-800" />}
+            className="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md rounded-full shadow-none border border-white/20 px-4 py-2"
+            icon={<ArrowLeft strokeWidth={2} className="text-white" />}
           >
             回清單
           </BigButton>
           <div className="text-right flex-1 ml-6">
-            <h2 className="text-3xl sm:text-4xl font-black truncate">{playlist.name}</h2>
-            <p className="text-xl sm:text-2xl font-bold text-stone-400 mt-2">第 {currentSongIndex + 1} 首 / 共 {playlist.songs.length} 首</p>
+            <h2 className="text-xl sm:text-2xl font-bold truncate text-white">{playlist.name}</h2>
+            <p className="text-sm sm:text-base font-medium text-gray-400 mt-1">第 {currentSongIndex + 1} 首 / 共 {playlist.songs.length} 首</p>
           </div>
         </header>
       )}
 
       {/* Video Container */}
       <div className={cn(
-        "relative rounded-[2rem] border-8 border-stone-700 bg-black overflow-hidden flex-1 flex flex-col justify-center",
-        isFullscreen ? "h-[calc(100vh-140px)]" : "w-full aspect-video md:aspect-auto md:min-h-[500px]"
+        "relative rounded-3xl bg-black overflow-hidden flex-1 flex flex-col justify-center",
+        isFullscreen ? "h-full w-full rounded-none" : "w-full aspect-video md:aspect-auto md:min-h-[500px]"
       )}>
         <YouTube 
           videoId={song.youtubeId} 
@@ -118,8 +118,8 @@ export function PlayerScreen() {
 
       {/* Controls */}
       <div className={cn(
-         "flex items-center justify-between gap-4 sm:gap-8 mt-6",
-         isFullscreen && "absolute bottom-6 left-6 right-6"
+         "flex items-center justify-between gap-4 sm:gap-8 mt-6 pb-4",
+         isFullscreen && "absolute bottom-10 left-6 right-6"
       )}>
          {/* Left Side */}
          <div className="flex gap-4">
@@ -127,23 +127,23 @@ export function PlayerScreen() {
               <motion.button 
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleFullscreen}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/30 transition-colors"
               >
-                <ArrowLeftCircle strokeWidth={3} size={40} />
+                <ArrowLeftCircle strokeWidth={2} size={32} />
               </motion.button>
            )}
          </div>
 
          {/* Center Controls */}
-         <div className="flex items-center gap-4 sm:gap-6 mx-auto bg-stone-800 p-4 sm:p-6 rounded-[3rem] border-[6px] border-stone-700 shadow-xl">
+         <div className="flex items-center gap-6 sm:gap-8 mx-auto px-6 py-4 rounded-[40px]">
             {!settings.singleStepMode && (
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={playPrev}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-colors"
               >
-                 <SkipBack size={iconSize} strokeWidth={3} fill="currentColor" />
+                 <SkipBack size={32} strokeWidth={2} fill="currentColor" />
               </motion.button>
             )}
 
@@ -152,13 +152,13 @@ export function PlayerScreen() {
               whileTap={{ scale: 0.95 }}
               onClick={handlePlayPause}
               className={cn(
-                "w-28 h-28 sm:w-36 sm:h-36 rounded-full border-[8px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_8px_0_0_#292524] active:shadow-none active:translate-y-[8px] transition-colors",
-                isPlaying ? "bg-pink-300 hover:bg-pink-200" : "bg-green-400 hover:bg-green-300"
+                "w-20 h-20 sm:w-24 sm:h-24 rounded-full text-white flex items-center justify-center transition-all shadow-lg",
+                isPlaying ? "bg-red-500 hover:bg-red-400" : "bg-white text-black hover:bg-gray-100"
               )}
             >
                {isPlaying 
-                 ? <Pause size={largeIconSize} strokeWidth={3} fill="currentColor" /> 
-                 : <Play size={largeIconSize} strokeWidth={3} fill="currentColor" className="ml-4" />
+                 ? <Pause size={40} strokeWidth={2} fill="currentColor" /> 
+                 : <Play size={40} strokeWidth={2} fill="currentColor" className="ml-2" />
                }
             </motion.button>
 
@@ -166,9 +166,9 @@ export function PlayerScreen() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={playNext}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange-100 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-colors"
             >
-               <SkipForward size={iconSize} strokeWidth={3} fill="currentColor" />
+               <SkipForward size={32} strokeWidth={2} fill="currentColor" />
             </motion.button>
          </div>
 
@@ -178,9 +178,9 @@ export function PlayerScreen() {
              <motion.button 
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleFullscreen}
-                className="w-20 h-20 rounded-2xl bg-blue-300 border-[6px] border-stone-800 text-stone-800 flex items-center justify-center shadow-[0_6px_0_0_#292524] active:shadow-none active:translate-y-[6px]"
+                className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-colors"
               >
-                <Maximize strokeWidth={3} size={36} />
+                <Maximize strokeWidth={2} size={24} />
               </motion.button>
            )}
          </div>

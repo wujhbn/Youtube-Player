@@ -13,18 +13,18 @@ interface BigButtonProps extends HTMLMotionProps<"button"> {
 export function BigButton({ children, variant = 'primary', className, icon, ...props }: BigButtonProps) {
   const { bigButtonMode } = useStore((state) => state.settings);
 
-  const baseStyles = "relative font-black rounded-2xl border-4 border-stone-800 transition-colors shadow-[0_2px_0_0_#292524] active:shadow-[0_0px_0_0_#292524] active:translate-y-[2px] flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap";
+  const baseStyles = "relative font-bold rounded-xl transition-all shadow-sm active:shadow-none active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap active:opacity-80";
   
   const variants = {
-    primary: "bg-orange-400 hover:bg-orange-300 text-stone-800",
-    secondary: "bg-blue-300 hover:bg-blue-200 text-stone-800",
-    danger: "bg-pink-300 hover:bg-pink-200 text-stone-800",
-    success: "bg-green-400 hover:bg-green-300 text-stone-800"
+    primary: "bg-blue-500 text-white hover:bg-blue-600",
+    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
+    danger: "bg-red-500 text-white hover:bg-red-600",
+    success: "bg-green-500 text-white hover:bg-green-600"
   };
 
   const sizeStyles = bigButtonMode 
-    ? "px-10 py-4 text-3xl" 
-    : "px-6 py-2 text-xl"; 
+    ? "px-8 py-4 text-2xl rounded-2xl" 
+    : "px-5 py-2.5 text-[17px]"; 
 
   return (
     <motion.button
