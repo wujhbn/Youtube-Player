@@ -35,11 +35,11 @@ export function HomeScreen() {
         <h1 className={`${titleSize} font-black text-stone-800 drop-shadow-[3px_3px_0_#fff59d]`}>
           📺 YouTube 播放器
         </h1>
-        <div className="flex gap-4">
-          <BigButton variant="success" onClick={handleAdd} icon={<Plus strokeWidth={3} />}>
+        <div className="flex gap-4 w-full sm:w-auto">
+          <BigButton variant="success" onClick={handleAdd} icon={<Plus strokeWidth={3} />} className="flex-1 sm:flex-none">
             新增
           </BigButton>
-          <BigButton variant="secondary" onClick={() => setShowSettings(!showSettings)} icon={<Settings strokeWidth={3} />}>
+          <BigButton variant="secondary" onClick={() => setShowSettings(!showSettings)} icon={<Settings strokeWidth={3} />} className="flex-1 sm:flex-none">
             設定
           </BigButton>
         </div>
@@ -84,7 +84,7 @@ export function HomeScreen() {
           >
             <div className="absolute top-4 right-4 z-10" onClick={(e) => e.stopPropagation()}>
                <button 
-                  className="w-16 h-16 rounded-full bg-pink-300 border-4 border-stone-800 flex items-center justify-center hover:bg-pink-400 active:scale-95 shadow-[4px_4px_0_0_#292524]"
+                  className="w-16 h-16 rounded-full bg-pink-300 border-4 border-stone-800 flex items-center justify-center hover:bg-pink-400 active:scale-95 shadow-[2px_2px_0_0_#292524]"
                   onClick={() => setPlaylistToDelete(playlist.id)}
                >
                  <Trash2 size={32} strokeWidth={3} />
@@ -95,10 +95,10 @@ export function HomeScreen() {
               <img 
                 src={playlist.coverImg} 
                 alt={playlist.name} 
-                className="w-48 h-32 rounded-2xl border-4 border-stone-800 object-cover shadow-[4px_4px_0_0_#292524]"
+                className="w-48 h-32 rounded-2xl border-4 border-stone-800 object-cover shadow-[2px_2px_0_0_#292524]"
               />
             ) : (
-              <div className="w-48 h-32 rounded-2xl border-4 border-stone-800 bg-orange-200 flex items-center justify-center shadow-[4px_4px_0_0_#292524]">
+              <div className="w-48 h-32 rounded-2xl border-4 border-stone-800 bg-orange-200 flex items-center justify-center shadow-[2px_2px_0_0_#292524]">
                 <Music size={iconSize} strokeWidth={3} className="text-stone-800 opacity-50" />
               </div>
             )}
@@ -123,7 +123,7 @@ export function HomeScreen() {
           type="text" 
           value={newPlaylistName} 
           onChange={e => setNewPlaylistName(e.target.value)} 
-          className="text-3xl font-bold p-6 rounded-2xl border-[6px] border-stone-800 bg-white focus:bg-pink-50 outline-none w-full shadow-[4px_4px_0_0_#292524]"
+          className="text-3xl font-bold p-6 rounded-2xl border-[6px] border-stone-800 bg-white focus:bg-pink-50 outline-none w-full shadow-[2px_2px_0_0_#292524]"
         />
         <div className="flex flex-col sm:flex-row gap-6 mt-4">
           <BigButton variant="success" className="flex-1 text-4xl py-6" onClick={confirmAdd}>確定</BigButton>

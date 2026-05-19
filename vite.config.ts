@@ -11,7 +11,7 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon-v3.png'],
+        includeAssets: ['favicon.ico', 'apple-touch-icon-v4.png'],
         manifest: {
           name: 'YouTube 播放器',
           short_name: 'YouTube播放器',
@@ -21,12 +21,12 @@ export default defineConfig(() => {
           display: 'fullscreen',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: 'pwa-192x192-v4.png',
               sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'pwa-512x512-v4.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'

@@ -140,11 +140,8 @@ export function PlaylistScreen() {
               type="text" 
               value={urlInput}
               onChange={e => setUrlInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleAddYoutube();
-              }}
               placeholder="請貼上網址，或輸入關鍵字搜尋..."
-              className={`flex-1 rounded-[1.5rem] border-[6px] border-stone-800 px-6 py-4 font-bold outline-none focus:border-pink-400 focus:bg-pink-50 transition-colors shadow-[4px_4px_0_0_#292524] ${textSize}`}
+              className={`flex-1 rounded-[1.5rem] border-[6px] border-stone-800 px-6 py-4 font-bold outline-none focus:border-pink-400 focus:bg-pink-50 transition-colors shadow-[2px_2px_0_0_#292524] ${textSize}`}
             />
             <BigButton variant="success" onClick={handleAddYoutube} disabled={loading}>
               {loading ? '讀取中...' : '找找看'}
@@ -167,7 +164,7 @@ export function PlaylistScreen() {
             <div className="absolute top-4 right-4 z-10 flex gap-2">
               {!settings.singleStepMode && (
                   <button 
-                  className="w-14 h-14 rounded-full bg-pink-100 border-4 border-stone-800 flex items-center justify-center hover:bg-pink-200 active:scale-95 shadow-[4px_4px_0_0_#292524]"
+                  className="w-14 h-14 rounded-full bg-pink-100 border-4 border-stone-800 flex items-center justify-center hover:bg-pink-200 active:scale-95 shadow-[2px_2px_0_0_#292524]"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSongToDelete(song.id);
@@ -178,7 +175,7 @@ export function PlaylistScreen() {
               )}
             </div>
 
-            <div className="relative aspect-video rounded-2xl overflow-hidden border-4 border-stone-800 shadow-[4px_4px_0_0_#292524]">
+            <div className="relative aspect-video rounded-2xl overflow-hidden border-4 border-stone-800 shadow-[2px_2px_0_0_#292524]">
               <img src={song.thumbnail} alt={song.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                  <Play className="text-white w-20 h-20 drop-shadow-lg" fill="currentColor" />
@@ -226,7 +223,7 @@ export function PlaylistScreen() {
           {searchResults.map((video, i) => (
             <div 
               key={i} 
-              className="flex items-center gap-6 p-4 border-4 border-stone-800 rounded-2xl cursor-pointer hover:bg-orange-100 transition-colors shadow-[4px_4px_0_0_#292524] active:scale-95 active:shadow-none bg-white"
+              className="flex items-center gap-6 p-4 border-4 border-stone-800 rounded-2xl cursor-pointer hover:bg-orange-100 transition-colors shadow-[2px_2px_0_0_#292524] active:scale-95 active:shadow-none bg-white"
               onClick={() => handleSelectSearchResult(video)}
             >
               <img src={video.thumbnail} alt={video.title} className="w-40 h-28 object-cover rounded-xl border-4 border-stone-800" />
