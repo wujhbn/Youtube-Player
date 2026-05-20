@@ -18,7 +18,7 @@ export function Modal({ isOpen, children }: ModalProps) {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="w-full max-w-2xl"
           >
-            <Card color="bg-white" className="p-8 sm:p-12 shadow-xl flex flex-col gap-8 rounded-[32px] border-none">
+            <Card color="bg-white" className="p-8 sm:p-12 flex flex-col gap-8">
               {children}
             </Card>
           </motion.div>

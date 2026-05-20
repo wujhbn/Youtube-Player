@@ -13,13 +13,13 @@ interface BigButtonProps extends HTMLMotionProps<"button"> {
 export function BigButton({ children, variant = 'primary', className, icon, ...props }: BigButtonProps) {
   const { bigButtonMode } = useStore((state) => state.settings);
 
-  const baseStyles = "relative font-bold rounded-xl transition-all shadow-sm active:shadow-none active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap active:opacity-80";
+  const baseStyles = "relative font-bold transition-all flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap border-[4px] border-[#4a3a31] rounded-[24px] box-border active:translate-y-[4px]";
   
   const variants = {
-    primary: "bg-blue-500 text-white hover:bg-blue-600",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-    danger: "bg-red-500 text-white hover:bg-red-600",
-    success: "bg-green-500 text-white hover:bg-green-600"
+    primary: "bg-[#6cc1ff] text-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] hover:brightness-110 active:shadow-[0px_2px_0px_#4a3a31]",
+    secondary: "bg-white text-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] hover:bg-gray-50 active:shadow-[0px_2px_0px_#4a3a31]",
+    danger: "bg-[#ff8e8b] text-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] hover:brightness-110 active:shadow-[0px_2px_0px_#4a3a31]",
+    success: "bg-[#6ddeba] text-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] hover:brightness-110 active:shadow-[0px_2px_0px_#4a3a31]"
   };
 
   const sizeStyles = bigButtonMode 
@@ -29,7 +29,6 @@ export function BigButton({ children, variant = 'primary', className, icon, ...p
   return (
     <motion.button
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.95 }}
       className={cn(baseStyles, variants[variant], sizeStyles, className)}
       {...props}
     >

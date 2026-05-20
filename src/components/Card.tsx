@@ -13,11 +13,11 @@ export function Card({ children, className, onClick, color = "bg-orange-100", ..
   return (
     <motion.div
       whileHover={onClick ? { scale: 1.01 } : {}}
-      whileTap={onClick ? { scale: 0.98 } : {}}
       onClick={onClick}
       className={cn(
-        "rounded-[24px] bg-white p-6 shadow-sm border border-gray-100 relative overflow-hidden",
-        onClick && "cursor-pointer active:opacity-80 transition-all",
+        "rounded-[32px] bg-white p-6 shadow-[4px_6px_0px_#4a3a31] border-[4px] border-[#4a3a31] relative overflow-hidden",
+        onClick && "cursor-pointer active:translate-y-[2px] active:shadow-[2px_4px_0px_#4a3a31] transition-all",
+        color,
         className
       )}
       {...props}

@@ -15,20 +15,21 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 font-sans tracking-tight selection:bg-blue-200 outline-none;
+    @apply bg-[#fffcea] text-[#4a3a31] font-sans tracking-tight selection:bg-[#ff8e8b] outline-none;
     -webkit-tap-highlight-color: transparent;
   }
 }
 
 /* Hide scrollbar for clean UI */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 10px;
+  background-color: #ffb457;
+  border-radius: 20px;
+  border: 3px solid #fffcea;
 }
 
