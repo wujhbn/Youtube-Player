@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { useStore } from '../store/useStore';
 import { BigButton } from './BigButton';
-import { ArrowLeft, Play, Pause, SkipBack, SkipForward, Maximize, ArrowLeftCircle } from 'lucide-react';
+import { ArrowLeft, Play, Pause, SkipBack, SkipForward, Maximize, ArrowLeftCircle, Volume2, VolumeX, FastForward } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,6 +13,9 @@ export function PlayerScreen() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [volume, setVolume] = useState(100);
+  const [isMuted, setIsMuted] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
   
   const resetControlsTimeout = () => {
     setShowControls(true);
@@ -66,6 +69,9 @@ export function PlayerScreen() {
 
   const onReady: YouTubeProps['onReady'] = (event) => {
     playerRef.current = event.target;
+    setVolume(event.target.getVolume());
+    setIsMuted(event.target.isMuted());
+    setPlaybackRate(event.target.getPlaybackRate() || 1);
     event.target.playVideo();
   };
 
@@ -91,6 +97,27 @@ export function PlayerScreen() {
     } else {
       playerRef.current.playVideo();
     }
+  };
+
+  const handleToggleMute = () => {
+    if (!playerRef.current) return;
+    if (isMuted) {
+      playerRef.current.unMute();
+      setIsMuted(false);
+      playerRef.current.setVolume(volume);
+    } else {
+      playerRef.current.mute();
+      setIsMuted(true);
+    }
+  };
+
+  const handleCycleSpeed = () => {
+    if (!playerRef.current) return;
+    const rates = [0.5, 0.75, 1, 1.25, 1.5, 2];
+    const currentIndex = rates.indexOf(playbackRate);
+    const nextRate = rates[(currentIndex + 1) % rates.length];
+    playerRef.current.setPlaybackRate(nextRate);
+    setPlaybackRate(nextRate);
   };
 
   const toggleFullscreen = () => {
@@ -173,7 +200,7 @@ export function PlayerScreen() {
           isFullscreen && "absolute bottom-10 left-6 right-6"
         )}>
            {/* Left Side */}
-           <div className="flex gap-4">
+           <div className="flex items-center gap-3 sm:gap-4">
              {isFullscreen && (
                 <button 
                   onClick={toggleFullscreen}
@@ -182,6 +209,13 @@ export function PlayerScreen() {
                   <ArrowLeftCircle strokeWidth={2} size={32} />
                 </button>
              )}
+             
+             <button
+               onClick={handleToggleMute}
+               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+             >
+               {isMuted ? <VolumeX size={24} strokeWidth={3} /> : <Volume2 size={24} strokeWidth={3} />}
+             </button>
            </div>
 
            {/* Center Controls */}
@@ -217,7 +251,14 @@ export function PlayerScreen() {
            </div>
 
            {/* Right Side */}
-           <div className="flex gap-4">
+           <div className="flex items-center gap-3 sm:gap-4">
+             <button
+               onClick={handleCycleSpeed}
+               className="h-12 sm:h-14 px-4 rounded-[24px] bg-[#fffcea] text-[#4a3a31] font-bold text-sm sm:text-lg flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+             >
+               {playbackRate}x
+             </button>
+
              {!isFullscreen && !settings.singleStepMode && (
                <button 
                   onClick={toggleFullscreen}
