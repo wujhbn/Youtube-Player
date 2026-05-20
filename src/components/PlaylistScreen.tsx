@@ -64,8 +64,8 @@ export function PlaylistScreen() {
         } else {
           setAlertMessage("找不到影片，換個關鍵字試試看！");
         }
-      } catch (err) {
-        setAlertMessage("搜尋失敗，請稍後再試！");
+      } catch (err: any) {
+        setAlertMessage(`搜尋失敗: ${err.message || String(err)}`);
       } finally {
         setLoading(false);
       }
@@ -99,9 +99,9 @@ export function PlaylistScreen() {
       });
       setUrlInput('');
       setAlertMessage("加好了！");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setAlertMessage("無法取得影片資訊，但已加入列表。");
+      setAlertMessage(`無法取得影片資訊 (${err.message})，但已加入列表。`);
       addSong(playlist.id, {
         youtubeId: videoId,
         title: `新影片`,
@@ -260,20 +260,12 @@ export function PlaylistScreen() {
       </Modal>
 
       <Modal isOpen={showAuthIframe}>
-        <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-4 text-center">需要驗證以啟用搜尋</h2>
-        <p className="text-gray-600 mb-4 text-sm text-center">iOS 阻擋了應用程式的連線。請在下方點擊「Allow」或「允許」來驗證。</p>
-        <div className="w-full h-[400px] border-2 border-gray-200 rounded-xl overflow-hidden bg-gray-50 mb-4 relative">
-          <iframe 
-            src="/api/yt-search"
-            className="w-full h-full border-none"
-            title="auth-frame"
-          />
-        </div>
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-4 text-center">需要驗證連線</h2>
+        <p className="text-gray-600 mb-6 text-sm text-center">Apple 系統 (iOS/iPadOS) 需要您手動允許應用程式進行連線搜尋。<br/><br/>點擊下方按鈕後，會進入驗證畫面，請點擊「Allow」或「允許」，接著會自動回到本應用程式。</p>
         <div className="flex flex-col sm:flex-row gap-4">
           <BigButton variant="success" className="flex-1" onClick={() => {
-            setShowAuthIframe(false);
-            handleAddYoutube();
-          }}>我已經點了（再試一次）</BigButton>
+            window.location.href = "/api/auth";
+          }}>前往驗證</BigButton>
           <BigButton variant="secondary" className="flex-1" onClick={() => setShowAuthIframe(false)}>取消</BigButton>
         </div>
       </Modal>

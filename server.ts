@@ -8,6 +8,12 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Auth helper for iOS PWAs
+  app.get("/api/auth", (req, res) => {
+    // Once this route is reached, it means the proxy let it through.
+    res.redirect("/");
+  });
+
   // API Route to fetch YouTube info avoiding CORS
   app.get("/api/yt-info", async (req, res) => {
     try {
