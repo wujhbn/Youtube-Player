@@ -22,7 +22,7 @@ export function PlayerScreen() {
     if (isPlaying) {
       hideControlsTimer.current = setTimeout(() => {
         setShowControls(false);
-      }, 3500); // Hide after 3.5 seconds
+      }, 2000); // Hide after 2 seconds
     }
   };
 

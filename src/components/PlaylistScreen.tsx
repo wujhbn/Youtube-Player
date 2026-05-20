@@ -46,7 +46,7 @@ export function PlaylistScreen() {
       // Perform search instead!
       setLoading(true);
       try {
-        const res = await fetch(`/api/yt-search?q=${encodeURIComponent(urlInput)}`);
+        const res = await fetch(`/api/video-search?q=${encodeURIComponent(urlInput)}`);
         
         // Handle AI Studio Proxy Cookie Check for PWAs
         const contentType = res.headers.get("content-type");
@@ -56,7 +56,10 @@ export function PlaylistScreen() {
           return;
         }
 
-        if (!res.ok) throw new Error("Search failed");
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Search failed: ${res.status} ${text}`);
+        }
         const data = await res.json();
         if (data && data.length > 0) {
           setSearchResults(data);
@@ -74,7 +77,7 @@ export function PlaylistScreen() {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/yt-info?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`);
+      const res = await fetch(`/api/video-info?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`);
       
       const contentType = res.headers.get("content-type");
       if (contentType && contentType.includes("text/html")) {

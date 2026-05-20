@@ -1,10 +1,11 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
+import ytSearch from "yt-search";
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
 
   app.use(express.json());
 
@@ -15,7 +16,7 @@ async function startServer() {
   });
 
   // API Route to fetch YouTube info avoiding CORS
-  app.get("/api/yt-info", async (req, res) => {
+  app.get("/api/video-info", async (req, res) => {
     try {
       const url = req.query.url;
       if (!url || typeof url !== "string") {
@@ -40,14 +41,13 @@ async function startServer() {
     }
   });
 
-  app.get("/api/yt-search", async (req, res) => {
+  app.get("/api/video-search", async (req, res) => {
     try {
       const q = req.query.q;
       if (!q || typeof q !== "string") {
         return res.status(400).json({ error: "Missing q parameter" });
       }
       
-      const ytSearch = (await import("yt-search")).default;
       const r = await ytSearch(q);
       const videos = r.videos.slice(0, 10).map(v => ({
         videoId: v.videoId,
