@@ -59,7 +59,8 @@ export function PlayerScreen() {
       modestbranding: 1,
       disablekb: 1,
       fs: 0,
-      iv_load_policy: 3
+      iv_load_policy: 3,
+      playsinline: 1,
     },
   };
 
@@ -69,9 +70,13 @@ export function PlayerScreen() {
   };
 
   const onStateChange: YouTubeProps['onStateChange'] = (event) => {
-    // 1 = playing, 2 = paused
-    if (event.data === 1) setIsPlaying(true);
-    if (event.data === 2) setIsPlaying(false);
+    // 1 = playing, 2 = paused, 0 = ended, -1 = unstarted, 3 = buffering, 5 = cued
+    if (event.data === 1 || event.data === 3) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+    
     if (event.data === 0) { // ended
       playNext();
     }
