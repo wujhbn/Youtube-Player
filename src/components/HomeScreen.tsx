@@ -25,8 +25,8 @@ export function HomeScreen() {
     setIsAddModalOpen(false);
   };
 
-  const titleSize = settings.bigButtonMode ? 'text-6xl' : 'text-4xl sm:text-5xl';
-  const cardTitleSize = settings.bigButtonMode ? 'text-5xl' : 'text-3xl';
+  const titleSize = settings.bigButtonMode ? 'text-4xl sm:text-6xl' : 'text-3xl sm:text-5xl';
+  const cardTitleSize = settings.bigButtonMode ? 'text-3xl sm:text-5xl' : 'text-2xl sm:text-3xl';
   const iconSize = settings.bigButtonMode ? 80 : 64;
 
   return (

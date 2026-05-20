@@ -129,17 +129,17 @@ export function PlaylistScreen() {
     setAlertMessage("加好了！");
   };
 
-  const titleSize = settings.bigButtonMode ? 'text-6xl' : 'text-5xl';
-  const textSize = settings.bigButtonMode ? 'text-4xl' : 'text-2xl';
+  const titleSize = settings.bigButtonMode ? 'text-4xl sm:text-6xl' : 'text-3xl sm:text-5xl';
+  const textSize = settings.bigButtonMode ? 'text-2xl sm:text-4xl' : 'text-lg sm:text-2xl';
 
   return (
     <div className="min-h-screen px-4 sm:px-12 max-w-7xl mx-auto flex flex-col gap-6" style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
       <header className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-4">
-        <div className="flex items-center gap-4 w-full sm:w-auto">
-          <BigButton variant="secondary" onClick={() => navigate('home')} icon={<ArrowLeft strokeWidth={2} />} className="p-3">
+        <div className="flex items-center gap-4 w-full sm:w-auto overflow-hidden pr-2">
+          <BigButton variant="secondary" onClick={() => navigate('home')} icon={<ArrowLeft strokeWidth={2} />} className="p-3 shrink-0">
             返回
           </BigButton>
-          <h1 className={`${titleSize} font-extrabold text-[#4a3a31] drop-shadow-sm tracking-tight truncate max-w-[200px] sm:max-w-md`}>
+          <h1 className={`${titleSize} font-extrabold text-[#4a3a31] drop-shadow-sm tracking-tight truncate flex-1 min-w-0 pb-1 pt-1`}>
             {playlist.name}
           </h1>
         </div>
@@ -218,7 +218,16 @@ export function PlaylistScreen() {
           </Card>
         ))}
         {playlist.songs.length === 0 && (
-          <div className="col-span-full text-center py-24 text-xl font-bold text-[#4a3a31] bg-white rounded-[32px] border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31]">
+          <div 
+            className="col-span-full text-center py-24 text-xl font-bold text-[#4a3a31] bg-white rounded-[32px] border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] cursor-pointer hover:bg-[#fffcea] active:translate-y-[2px] transition-all"
+            onClick={() => {
+              const input = document.querySelector('input');
+              if (input) {
+                input.focus();
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }}
+          >
              🪹 還沒有影片喔，趕快加入吧！
           </div>
         )}
