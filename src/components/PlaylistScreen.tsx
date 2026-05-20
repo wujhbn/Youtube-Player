@@ -14,6 +14,7 @@ export function PlaylistScreen() {
 
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [previewVideo, setPreviewVideo] = useState<any>(null);
   const [showAuthIframe, setShowAuthIframe] = useState(false);
 
   const playlist = playlists.find(p => p.id === activePlaylistId);
@@ -123,6 +124,7 @@ export function PlaylistScreen() {
       thumbnail: video.thumbnail
     });
     setIsSearchModalOpen(false);
+    setPreviewVideo(null);
     setUrlInput('');
     setAlertMessage("加好了！");
   };
@@ -244,23 +246,58 @@ export function PlaylistScreen() {
 
       <Modal isOpen={isSearchModalOpen}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-extrabold text-[#4a3a31] tracking-tight">選一個你想加的影片 👀</h2>
-          <button className="text-[#4a3a31] hover:bg-[#fffcea] p-2 rounded-full transition-colors font-bold" onClick={() => setIsSearchModalOpen(false)}>
+          <h2 className="text-xl font-extrabold text-[#4a3a31] tracking-tight">{previewVideo ? '預覽影片 👀' : '選一個你想加的影片 👀'}</h2>
+          <button className="text-[#4a3a31] hover:bg-[#fffcea] p-2 rounded-full transition-colors font-bold" onClick={() => { setIsSearchModalOpen(false); setPreviewVideo(null); }}>
              取消
           </button>
         </div>
-        <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2">
-          {searchResults.map((video, i) => (
-             <div 
-              key={i} 
-              className="flex items-center gap-4 p-3 rounded-[24px] cursor-pointer hover:bg-white transition-colors active:translate-y-[2px] bg-[#fffcea] border-[3px] border-[#4a3a31] box-border shadow-[2px_2px_0px_#4a3a31]"
-              onClick={() => handleSelectSearchResult(video)}
-            >
-              <img src={video.thumbnail} alt={video.title} className="w-32 aspect-video object-cover rounded-[16px] border-[2px] border-[#4a3a31]" />
-              <h3 className="text-md font-bold flex-1 line-clamp-3 text-[#4a3a31] leading-snug">{video.title}</h3>
+        
+        {previewVideo ? (
+          <div className="flex flex-col gap-4">
+            <div className="aspect-video w-full rounded-[16px] overflow-hidden border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] bg-black">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${previewVideo.videoId}?autoplay=1`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
-          ))}
-        </div>
+            <h3 className="text-lg font-bold text-[#4a3a31] line-clamp-2 leading-snug">{previewVideo.title}</h3>
+            <div className="flex flex-col sm:flex-row gap-4 mt-2">
+              <BigButton 
+                variant="success" 
+                className="flex-1" 
+                onClick={() => handleSelectSearchResult(previewVideo)}
+                icon={<Plus strokeWidth={3} />}
+              >
+                加入清單
+              </BigButton>
+              <BigButton 
+                variant="secondary" 
+                className="flex-1" 
+                onClick={() => setPreviewVideo(null)}
+                icon={<ArrowLeft strokeWidth={3} />}
+              >
+                返回搜尋
+              </BigButton>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2">
+            {searchResults.map((video, i) => (
+               <div 
+                key={i} 
+                className="flex items-center gap-4 p-3 rounded-[24px] cursor-pointer hover:bg-white transition-colors active:translate-y-[2px] bg-[#fffcea] border-[3px] border-[#4a3a31] box-border shadow-[2px_2px_0px_#4a3a31]"
+                onClick={() => setPreviewVideo(video)}
+              >
+                <img src={video.thumbnail} alt={video.title} className="w-32 aspect-video object-cover rounded-[16px] border-[2px] border-[#4a3a31]" />
+                <h3 className="text-md font-bold flex-1 line-clamp-3 text-[#4a3a31] leading-snug">{video.title}</h3>
+              </div>
+            ))}
+          </div>
+        )}
       </Modal>
 
       <Modal isOpen={showAuthIframe}>
