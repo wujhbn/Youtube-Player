@@ -83,12 +83,14 @@ export function PlayerScreen() {
   };
 
   const handlePlayPause = () => {
-    if (isPlaying) {
-      playerRef.current?.pauseVideo();
+    if (!playerRef.current) return;
+    const state = playerRef.current.getPlayerState();
+    // 1 = playing, 3 = buffering
+    if (state === 1 || state === 3) {
+      playerRef.current.pauseVideo();
     } else {
-      playerRef.current?.playVideo();
+      playerRef.current.playVideo();
     }
-    setIsPlaying(!isPlaying);
   };
 
   const toggleFullscreen = () => {
@@ -193,11 +195,10 @@ export function PlayerScreen() {
                 </button>
               )}
 
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
+              <button 
                 onClick={handlePlayPause}
                 className={cn(
-                  "w-20 h-20 sm:w-24 sm:h-24 rounded-full text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31]",
+                  "w-20 h-20 sm:w-24 sm:h-24 rounded-full text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110",
                   isPlaying ? "bg-[#ff8e8b]" : "bg-[#6cc1ff]"
                 )}
               >
@@ -205,7 +206,7 @@ export function PlayerScreen() {
                    ? <Pause size={40} strokeWidth={2} fill="currentColor" /> 
                    : <Play size={40} strokeWidth={2} fill="currentColor" className="ml-2" />
                  }
-              </motion.button>
+              </button>
 
                 <button 
                   onClick={playNext}
