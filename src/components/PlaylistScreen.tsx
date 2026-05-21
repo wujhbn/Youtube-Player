@@ -139,7 +139,7 @@ export function PlaylistScreen() {
           <BigButton variant="secondary" onClick={() => navigate('home')} icon={<ArrowLeft strokeWidth={2} />} className="p-3 shrink-0">
             返回
           </BigButton>
-          <h1 className={`${titleSize} font-extrabold text-[#4a3a31] drop-shadow-sm tracking-tight truncate flex-1 min-w-0 pb-1 pt-1`}>
+          <h1 className={`${titleSize} font-extrabold text-[#4a3a31] drop-shadow-sm tracking-tight flex-1 min-w-0 pb-1 pt-1 break-words line-clamp-2`}>
             {playlist.name}
           </h1>
         </div>
@@ -155,7 +155,7 @@ export function PlaylistScreen() {
         )}
       </header>
 
-      {!settings.singleStepMode && (
+      {(!settings.singleStepMode || playlist.songs.length === 0) && (
         <Card className="flex flex-col gap-4 p-6 sm:p-8 mt-4 bg-[#6cc1ff]" color="bg-[#6cc1ff]">
           <h2 className="text-xl font-extrabold flex items-center gap-2 text-[#4a3a31]"><Plus strokeWidth={4} /> 加新影片進來 🎬</h2>
           <div className="flex flex-col sm:flex-row gap-3">

@@ -196,65 +196,71 @@ export function PlayerScreen() {
         )}
       >
         <div className={cn(
-          "flex items-center justify-between gap-4 sm:gap-8 mt-6 pb-4",
-          isFullscreen && "absolute bottom-10 left-6 right-6"
+          "flex flex-wrap items-center justify-center sm:justify-between gap-y-4 gap-x-2 sm:gap-8 mt-2 sm:mt-6 pb-2 sm:pb-4 pointer-events-auto",
+          isFullscreen && "absolute bottom-4 sm:bottom-10 left-2 right-2 sm:left-6 sm:right-6 pointer-events-none"
         )}>
            {/* Left Side */}
-           <div className="flex items-center gap-3 sm:gap-4">
+           <div className={cn(
+             "flex items-center gap-2 sm:gap-4 pointer-events-auto",
+             isFullscreen ? "absolute top-[-50px] left-0 sm:relative sm:top-0" : ""
+           )}>
              {isFullscreen && (
                 <button 
                   onClick={toggleFullscreen}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#ff8e8b] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#ff8e8b] text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
                 >
-                  <ArrowLeftCircle strokeWidth={2} size={32} />
+                  <ArrowLeftCircle strokeWidth={2} className="w-7 h-7 sm:w-8 sm:h-8" />
                 </button>
              )}
              
              <button
                onClick={handleToggleMute}
-               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
              >
-               {isMuted ? <VolumeX size={24} strokeWidth={3} /> : <Volume2 size={24} strokeWidth={3} />}
+               {isMuted ? <VolumeX className="w-6 h-6 sm:w-6 sm:h-6" strokeWidth={3} /> : <Volume2 className="w-6 h-6 sm:w-6 sm:h-6" strokeWidth={3} />}
              </button>
            </div>
 
            {/* Center Controls */}
-           <div className="flex items-center gap-6 sm:gap-8 mx-auto px-6 py-4 rounded-[40px]">
+           <div className="flex items-center gap-4 sm:gap-8 mx-auto px-4 sm:px-6 py-2 sm:py-4 rounded-[40px] pointer-events-auto">
               {!settings.singleStepMode && (
                 <button 
                   onClick={playPrev}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
                 >
-                   <SkipBack size={32} strokeWidth={2} fill="currentColor" />
+                   <SkipBack className="w-6 h-6 sm:w-8 sm:h-8" strokeWidth={2} fill="currentColor" />
                 </button>
               )}
 
               <button 
                 onClick={handlePlayPause}
                 className={cn(
-                  "w-20 h-20 sm:w-24 sm:h-24 rounded-full text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110",
+                  "w-16 h-16 sm:w-24 sm:h-24 rounded-full text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110",
                   isPlaying ? "bg-[#ff8e8b]" : "bg-[#6cc1ff]"
                 )}
               >
                  {isPlaying 
-                   ? <Pause size={40} strokeWidth={2} fill="currentColor" /> 
-                   : <Play size={40} strokeWidth={2} fill="currentColor" className="ml-2" />
+                   ? <Pause className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={2} fill="currentColor" /> 
+                   : <Play className="w-8 h-8 sm:w-10 sm:h-10 ml-1 sm:ml-2" strokeWidth={2} fill="currentColor" />
                  }
               </button>
 
                 <button 
                   onClick={playNext}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-[#fffcea] text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
                 >
-                 <SkipForward size={32} strokeWidth={2} fill="currentColor" />
+                 <SkipForward className="w-6 h-6 sm:w-8 sm:h-8" strokeWidth={2} fill="currentColor" />
               </button>
            </div>
 
            {/* Right Side */}
-           <div className="flex items-center gap-3 sm:gap-4">
+           <div className={cn(
+             "flex items-center gap-2 sm:gap-4 pointer-events-auto",
+             isFullscreen ? "absolute top-[-50px] right-0 sm:relative sm:top-0" : ""
+           )}>
              <button
                onClick={handleCycleSpeed}
-               className="h-12 sm:h-14 px-4 rounded-[24px] bg-[#fffcea] text-[#4a3a31] font-bold text-sm sm:text-lg flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+               className="h-10 sm:h-14 px-3 sm:px-4 rounded-[24px] bg-[#fffcea] text-[#4a3a31] font-bold text-sm sm:text-lg flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
              >
                {playbackRate}x
              </button>
@@ -262,9 +268,9 @@ export function PlayerScreen() {
              {!isFullscreen && !settings.singleStepMode && (
                <button 
                   onClick={toggleFullscreen}
-                  className="w-14 h-14 rounded-full bg-[#6ddeba] text-[#4a3a31] flex items-center justify-center transition-all border-[4px] border-[#4a3a31] shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#6ddeba] text-[#4a3a31] flex items-center justify-center transition-all border-[3px] sm:border-[4px] border-[#4a3a31] shadow-[2px_4px_0px_#4a3a31] sm:shadow-[4px_6px_0px_#4a3a31] active:translate-y-[4px] active:shadow-[0px_2px_0px_#4a3a31] hover:brightness-110"
                 >
-                  <Maximize strokeWidth={3} size={24} />
+                  <Maximize strokeWidth={3} className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
              )}
            </div>
